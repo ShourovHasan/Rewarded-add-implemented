@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdError;
@@ -25,6 +28,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 public class MainActivity extends AppCompatActivity {
     Button tvButton;
     TextView tvDisplay;
+    ImageView imageView;
 
     private RewardedAd rewardedAd;
     private final String TAG = "MainActivity";
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 //        ----------------------------
         tvButton = findViewById(R.id.tvButton);
         tvDisplay = findViewById(R.id.tvDisplay);
+        imageView = findViewById(R.id.imageView);
 //        ----------------------------
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -47,7 +52,24 @@ public class MainActivity extends AppCompatActivity {
         tvButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showRewardedAdd();
+//                showRewardedAdd();
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Watch the video and get Gift")
+                        .setMessage("If you watch this video, you will see this image")
+                        .setPositiveButton("Watch VIdeo", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                showRewardedAdd();
+                            }
+                        })
+                        .setNegativeButton("No Thanks", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .create()
+                        .show();
             }
         });
 //        ----------------------------
@@ -128,6 +150,9 @@ public class MainActivity extends AppCompatActivity {
                     // Handle the reward.
                     Log.d(TAG, "The user earned the reward.");
                     tvDisplay.append("\nThe user earned the reward.");
+                    imageView.setImageResource(R.drawable.girl);
+
+
                     int rewardAmount = rewardItem.getAmount();
                     String rewardType = rewardItem.getType();
 
